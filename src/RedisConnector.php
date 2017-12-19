@@ -189,7 +189,7 @@ class RedisConnector extends AbstractAMQPConnector
     {
         $result = $connection->get($this->GetResultKey($task_id));
         if ($result) {
-            $redis_result = $this->ToDict($result, true);
+            $redis_result = $this->ToDict($result);
             $result = [
                 'complete_result' => $redis_result,
                 'body' => json_encode($redis_result)
