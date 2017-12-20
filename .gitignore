@@ -3,3 +3,4 @@
 /composer.lock
 /vendor/
 __pycache__/
+.*.swp
