@@ -13,5 +13,7 @@ rabbitmqctl set_permissions -p celerypecl gdr '.*' '.*' '.*'
 /venv/bin/celery worker --config celeryamqplibconfig --workdir $PWD/testscenario --detach --pidfile celeryamqplib.pid
 /venv/bin/celery worker --config celerypeclconfig --workdir $PWD/testscenario --detach --pidfile celerypecl.pid
 /venv/bin/celery worker --config celeryredisconfig --workdir $PWD/testscenario --detach --pidfile celeryredis.pid
+# I have to sleep over 5 seconds before sending for this (AMQPlib) to work. Strange.
+sleep 10
 # Run the unit tests
 vendor/bin/phpunit
