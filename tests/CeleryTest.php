@@ -144,7 +144,11 @@ abstract class CeleryTest extends \PHPUnit_Framework_TestCase
     {
         $c = $this->get_c();
 
-        $printable = ['data' => base64_encode(random_bytes(10001))];
+        $printable = [
+            'aid' => 11111334224242,
+            'bid' => '11111334224242_12341451',
+            'data' => base64_encode(random_bytes(10000))
+        ];
 
         $result = $c->PostTask('tasks.identity', [$printable]);
 
@@ -158,7 +162,9 @@ abstract class CeleryTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result->isReady());
 
         $this->assertTrue($result->isSuccess());
-        $this->assertSame($printable, $result->getResult());
+        $data = (array)$result->getResult();
+        ksort($data);
+        $this->assertSame($printable, $data);
     }
 
 
