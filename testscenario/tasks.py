@@ -21,6 +21,9 @@ def fail():
     print("Got fail()")
     raise Exception
 
+@task
+def identity(x):
+    return x
 
 @task
 def delayed():

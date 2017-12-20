@@ -140,6 +140,28 @@ abstract class CeleryTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($printable . 'suffix', $result->getResult());
     }
 
+    public function testIdentityOperationVeryLong()
+    {
+        $c = $this->get_c();
+
+        $printable = ['data' => base64_encode(random_bytes(10001))];
+
+        $result = $c->PostTask('tasks.identity', [$printable]);
+
+        for ($i = 0; $i < 10; $i++) {
+            if ($result->isReady()) {
+                break;
+            } else {
+                sleep(1);
+            }
+        }
+        $this->assertTrue($result->isReady());
+
+        $this->assertTrue($result->isSuccess());
+        $this->assertSame($printable, $result->getResult());
+    }
+
+
     public function testFailingOperation()
     {
         $c = $this->get_c();
