@@ -66,7 +66,7 @@ abstract class CeleryTest extends \PHPUnit_Framework_TestCase
 
         $result = $c->PostTask('tasks.add', [2, 2]);
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             if ($result->isReady()) {
                 break;
             } else {
