@@ -135,6 +135,7 @@ class AMQPLibConnector extends AbstractAMQPConnector
      * @param string $task_id Celery task identifier
      * @param int $expire expire time result queue, milliseconds
      * @param boolean $removeMessageFromQueue whether to remove message from queue
+     *                TODO: Was this change documented, could this have any impact on the behavior of clients
      * @return array array('body' => JSON-encoded message body, 'complete_result' => AMQPMessage object)
      * 			or false if result not ready yet
      */
