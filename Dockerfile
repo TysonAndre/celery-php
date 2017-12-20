@@ -22,7 +22,7 @@ RUN echo "extension=amqp.so" > /etc/php/7.1/cli/conf.d/20-amqp.ini
 
 # Celery install
 RUN virtualenv venv
-RUN venv/bin/pip install celery==3.1.25 redis
+RUN venv/bin/pip install celery redis
 
 # Add this last, so that previous docker layers can be reused
 RUN mkdir /opt/celery-php
