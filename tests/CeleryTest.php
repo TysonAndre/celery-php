@@ -123,7 +123,7 @@ abstract class CeleryTest extends \PHPUnit_Framework_TestCase
     {
         $c = $this->get_c();
 
-        $printable = json_encode(['data' => base64_encode(random_bytes(500000))]);
+        $printable = json_encode(['data' => base64_encode(random_bytes(1000001))]);
 
         $result = $c->PostTask('tasks.add', [$printable, 'suffix']);
 
