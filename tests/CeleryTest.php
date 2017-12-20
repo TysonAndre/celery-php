@@ -76,7 +76,68 @@ abstract class CeleryTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result->isReady());
 
         $this->assertTrue($result->isSuccess());
-        $this->assertEquals(4, $result->getResult());
+        $this->assertSame(4, $result->getResult());
+    }
+
+    public function testCorrectOperationString()
+    {
+        $c = $this->get_c();
+
+        $result = $c->PostTask('tasks.add', ['foo', 'bar']);
+
+        for ($i = 0; $i < 10; $i++) {
+            if ($result->isReady()) {
+                break;
+            } else {
+                sleep(1);
+            }
+        }
+        $this->assertTrue($result->isReady());
+
+        $this->assertTrue($result->isSuccess());
+        $this->assertSame('foobar', $result->getResult());
+    }
+
+    public function testCorrectOperationStringLong()
+    {
+        $c = $this->get_c();
+
+        $printable = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~\',===+++///';
+
+        $result = $c->PostTask('tasks.add', [$printable, $printable]);
+
+        for ($i = 0; $i < 10; $i++) {
+            if ($result->isReady()) {
+                break;
+            } else {
+                sleep(1);
+            }
+        }
+        $this->assertTrue($result->isReady());
+
+        $this->assertTrue($result->isSuccess());
+        $this->assertSame($printable . $printable, $result->getResult());
+    }
+
+    public function testCorrectOperationStringVeryLong()
+    {
+        $c = $this->get_c();
+
+        $printable = json_encode(['data' => base64_encode(random_bytes(500000))]);
+
+        $result = $c->PostTask('tasks.add', [$printable, 'suffix']);
+
+        for ($i = 0; $i < 10; $i++) {
+            if ($result->isReady()) {
+                break;
+            } else {
+                sleep(1);
+            }
+        }
+        $this->assertTrue($result->isReady());
+
+        $this->assertTrue($result->isSuccess());
+        $this->assertSame($printable . 'suffix', $result->getResult());
     }
 
     public function testFailingOperation()
@@ -152,8 +213,8 @@ abstract class CeleryTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($result->ready());
         $this->assertNull($result->result);
         $rv = $result->get();
-        $this->assertEquals(8, $rv);
-        $this->assertEquals(8, $result->result);
+        $this->assertSame(8, $rv);
+        $this->assertSame(8, $result->result);
         $this->assertTrue($result->successful());
     }
 
@@ -165,8 +226,8 @@ abstract class CeleryTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($result->ready());
         $this->assertNull($result->result);
         $rv = $result->get();
-        $this->assertEquals(8, $rv);
-        $this->assertEquals(8, $result->result);
+        $this->assertSame(8, $rv);
+        $this->assertSame(8, $result->result);
         $this->assertTrue($result->successful());
     }
 
@@ -186,9 +247,9 @@ abstract class CeleryTest extends \PHPUnit_Framework_TestCase
         $c = $this->get_c();
 
         $result = $c->PostTask('tasks.delayed', []);
-        $this->assertEquals($result->state, 'PENDING');
+        $this->assertSame($result->state, 'PENDING');
         $result->get();
-        $this->assertEquals($result->state, 'SUCCESS');
+        $this->assertSame($result->state, 'SUCCESS');
     }
 
     /* NO-OP functions should not fail */
@@ -207,8 +268,8 @@ abstract class CeleryTest extends \PHPUnit_Framework_TestCase
 
         $result = $c->PostTask('tasks.add', [4, 4]);
         $rv = $result->wait();
-        $this->assertEquals(8, $rv);
-        $this->assertEquals(8, $result->result);
+        $this->assertSame(8, $rv);
+        $this->assertSame(8, $result->result);
         $this->assertTrue($result->successful());
     }
 
@@ -220,8 +281,8 @@ abstract class CeleryTest extends \PHPUnit_Framework_TestCase
         $result_serialized = serialize($result_tmp);
         $result = unserialize($result_serialized);
         $rv = $result->get();
-        $this->assertEquals(8, $rv);
-        $this->assertEquals(8, $result->result);
+        $this->assertSame(8, $rv);
+        $this->assertSame(8, $result->result);
         $this->assertTrue($result->successful());
     }
 
@@ -246,7 +307,7 @@ abstract class CeleryTest extends \PHPUnit_Framework_TestCase
 
         $result = $c->PostTask('tasks.get_fibonacci', []);
         $rv = $result->wait();
-        $this->assertEquals(1, $rv[0]);
-        $this->assertEquals(34, $rv[8]);
+        $this->assertSame(1, $rv[0]);
+        $this->assertSame(34, $rv[8]);
     }
 }
